@@ -35,8 +35,8 @@
 	
 	<default>
 		<default class="wam/bhand">
-			<joint type="hinge" limited="true" pos="0 0 0" axis="0 0 1" frictional="true" frictionloss=".001"/>
-			<geom type="mesh" contype="0" conaffinity="1" group="0" rgba="0.5 0.6 0.7 1"/>			
+			<joint type="hinge" limited="true" pos="0 0 0" axis="0 0 1" frictionloss=".001"/>
+			<geom type="mesh" contype="0" conaffinity="1" group="0" rgba="0.5 0.6 0.7 0"/>			
 		</default>
 		<default class="wam/bhandViz">
 			<geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.7 0.8 0.8 1"/>
