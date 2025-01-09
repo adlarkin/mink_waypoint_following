@@ -1,16 +1,16 @@
 <!-- ======================================================
-	This file is part of MuJoCo.     
+	This file is part of MuJoCo.
 	Copyright 2009-2015 Roboti LLC.
-	
+
 	Model 		:: Barrett hand from Barrett technologies
 		Source		: https://github.com/jhu-lcsr/barrett_model
 		Downloaded	: 10Oct'15
-		
+
 	Mujoco		:: Advanced physics simulation engine
 		Source		: www.roboti.us
 		Version		: 1.22
 		Released 	: 26Nov15
-		
+
 	Author		:: Vikash Kumar
 		Contacts 	: kumar@roboti.us
 		Last edits 	: 26Dec'15
@@ -40,7 +40,7 @@
 					<inertial pos="0.022825 0.0010491 0.0004203" quat="0.508412 0.51165 0.489583 0.489939" mass="0.041377" diaginertia="3.8434e-005 3.72753e-005 3.09987e-006" />
 					<joint name="wam/bhand/finger_1/dist_joint" range="0 0.837758" damping="0.11"/>
 					<geom class="wam/bhandViz" mesh="bhand_finger_dist_link_fine" euler="0 0 -.84"/>
-					<geom mesh="bhand_finger_dist_link_convex" euler="0 0 -.84"/> 
+					<geom mesh="bhand_finger_dist_link_convex" euler="0 0 -.84"/>
 				</body>
 			</body>
 		</body>
