@@ -1,3 +1,4 @@
+import argparse
 import json
 import mink
 import mujoco
@@ -8,8 +9,16 @@ import time
 from pathlib import Path
 
 
+# Model files (MJCF)
 _HERE = Path(__file__).parent
-_XML = _HERE / "franka_emika_panda" / "scene.xml"
+_PANDA_XML = _HERE / "franka_emika_panda" / "scene.xml"
+_WAM_XML = _HERE / "barrett" / "wam_7dof_wam_bhand.xml"
+# Robot types to their model files
+_ROBOTS = {
+    'panda': _PANDA_XML,
+    'wam': _WAM_XML,
+}
+_VALID_ROBOT_TYPES = list(_ROBOTS.keys())
 
 
 # Function to add a coordinate frame to the scene.
@@ -57,7 +66,13 @@ def add_frame(scene: mujoco.MjvScene, origin, rot_mat, axis_radius=0.0075, axis_
 
 
 if __name__ == "__main__":
-    model = mujoco.MjModel.from_xml_path(_XML.as_posix())
+    parser = argparse.ArgumentParser()
+    parser.add_argument("robot", type=str, help=f"The robot to use. Must be one of {_VALID_ROBOT_TYPES}")
+    args = parser.parse_args()
+    if args.robot not in _VALID_ROBOT_TYPES:
+        raise ValueError(f"The given robot type {args.robot} is invalid, must be one of {_VALID_ROBOT_TYPES}")
+
+    model = mujoco.MjModel.from_xml_path(_ROBOTS[args.robot].as_posix())
     data = mujoco.MjData(model)
 
     configuration = mink.Configuration(model)
@@ -72,20 +87,33 @@ if __name__ == "__main__":
         ),
     ]
 
-    hand_geoms = mink.get_body_geom_ids(model, model.body("hand").id)
+    if args.robot == 'panda':
+        hand_geoms = mink.get_subtree_geom_ids(model, model.body("hand").id)
+        max_velocities = {
+            'joint1': np.pi,
+            'joint2': np.pi,
+            'joint3': np.pi,
+            'joint4': np.pi,
+            'joint5': np.pi,
+            'joint6': np.pi,
+            'joint7': np.pi,
+        }
+    elif args.robot == 'wam':
+        hand_geoms = mink.get_subtree_geom_ids(model, model.body("wam/bhand/bhand_palm_link").id)
+        max_velocities = {
+            'wam/base_yaw_joint'      : np.pi,
+            'wam/shoulder_pitch_joint': np.pi,
+            'wam/shoulder_yaw_joint'  : np.pi,
+            'wam/elbow_pitch_joint'   : np.pi,
+            'wam/wrist_pitch_joint'   : np.pi,
+            'wam/wrist_yaw_joint'     : np.pi,
+            'wam/palm_yaw_joint'      : np.pi,
+        }
+    # Enable collision avoidance between the following geoms:
     collision_pairs = [
-        # TODO: add collision avoidance between the hand and rest of the robot?
         (hand_geoms, ["floor"]),
+        # TODO: add collision avoidance between the hand and rest of the robot?
     ]
-    max_velocities = {
-        'joint1': np.pi,
-        'joint2': np.pi,
-        'joint3': np.pi,
-        'joint4': np.pi,
-        'joint5': np.pi,
-        'joint6': np.pi,
-        'joint7': np.pi,
-    }
     limits = [
         mink.ConfigurationLimit(model=model),
         mink.CollisionAvoidanceLimit(model=model, geom_pairs=collision_pairs),
@@ -151,11 +179,11 @@ if __name__ == "__main__":
 
         curr_waypoint_idx = 0
         while viewer.is_running() and curr_waypoint_idx < len(path):
-            # Run at 60hz.
+            # Run at 100hz.
             # NOTE: this is for visualization purposes.
             # If visualization is not important, the rate limit can be removed,
             # or the code can be modified to not use the mujoco.viewer at all.
-            time_between_updates = 1 / 60
+            time_between_updates = 1 / 100
 
             # Move the robot to the next waypoint by solving IK
             end_effector_task.set_target(path[curr_waypoint_idx])
