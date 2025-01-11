@@ -1,20 +1,25 @@
-Waypoint following on a Franka Panda robot with [mink](https://github.com/kevinzakka/mink).
+Waypoint following with [mink](https://github.com/kevinzakka/mink).
+
+## Setup
+
+Install mink if needed (using a venv is encouraged):
+```
+pip install mink
+```
 
 ## Usage
 
-```
-# Install mink if needed.
-# Using a venv is encouraged.
-pip install mink
+```shell
+python follow_waypoints.py -h
 
-# Run the waypoint following script.
+# How to run the waypoint following script with a franka panda robot.
 # Joint configurations for the waypoints will be saved to 'waypoint_configurations.json'.
-python follow_waypoints.py
-
-# Use 'waypoint_configurations.json' as you wish!
+python follow_waypoints.py panda
 ```
 
 ## Notes
 
+A site named `ee_site` must be defined at the end-effector of the robot model so that mink can perform end-effector tracking.
+
 The Franka Panda robot model was taken from [MuJoCo Menagerie](https://github.com/google-deepmind/mujoco_menagerie).
-A site named `ee_site` was added to [panda.xml](./franka_emika_panda/panda.xml) which is used for tracking the end effector with mink.
+The Barrett WAM model was taken from https://www.roboti.us/forum/index.php?resources/wam-and-barrett-hand.20/.
