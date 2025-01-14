@@ -28,12 +28,6 @@
             </default>
     </default>
 
-    <visual>
-        <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
-        <rgba haze="0.15 0.25 0.35 1"/>
-        <global azimuth="120" elevation="-20"/>
-    </visual>
-
     <asset>
             <mesh file="base_link_fine.stl"/>
             <mesh file="base_link_convex.stl"/>
@@ -60,18 +54,11 @@
             <mesh file="wrist_pitch_link_convex_decomposition_p3.stl"/>
             <mesh file="wrist_palm_link_fine.stl"/>
             <mesh file="wrist_palm_link_convex.stl"/>
-
-            <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
-            <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
-              markrgb="0.8 0.8 0.8" width="300" height="300"/>
-            <material name="MatGnd" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
     </asset>
     <include file="include_bhandDependencies.xml"/>
 
     <worldbody>
-        <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
-        <geom name="floor" type="plane" pos="0 0 0" size="0 0 .05" material="MatGnd"/>
-
+        <light name="top" pos="0 0 2" mode="trackcom"/>
         <body name="wam/base_link" pos="0 0 .3">
             <inertial pos="0 0 0" mass="1" diaginertia="0.1 0.1 0.1" />
             <geom class="viz" mesh="base_link_fine"/>
